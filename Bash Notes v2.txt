@@ -1,0 +1,163 @@
+###############
+### General ###
+###############
+- Bash cares greatly about capitlization, but not at all about blank lines. Similarly, it cares greatly about spaces, so a=1 is good, while a = 1 is bad.
+- Command options may be listed without additional dashes or spaces: -adl includes options a, d, and l.
+
+- CTRL + C is abbreviated ^C. Entering data in a prompt and done now? ^D
+
+- $REPLY is a system variable
+- \r is a carriage return
+- $0..$9 are system argument vars. When a command is executed with args, those become $1, etc. Note that $0 is the command itself. For example, hello.sh arg1 corresponds to $0 & $1.
+
+
+################
+### Commands ###
+################
+## cat ##
+Concatenate. Can be used for that, or (concatenating) a listing of files in a folder, either the current or another. EX:
+
+cat /etc/shells
+
+will display the contents of the file "shells". 13 uses URL:
+https://www.tecmint.com/13-basic-cat-command-examples-in-linux/
+
+
+## ls ##
+Lists. Common options:
+-l	Long Format**
+-h	human readable (just list the file names)
+-t	sort by date modified
+-1	(one, not L), forces one entry per line
+
+** -l: The cryptic nonesense before each file name describes R/W attributes for user type. Ex:
+
+drwxr--r--
+
+d denotes that the object in question is a directory. Now by section:
+rwx: the owner has the right to read (r), write (w) and execute (x)
+r--: group members (users part of the editors group) have read-only permissions; write and execute are not permitted, as denoted by the hyphen characters (-)
+r--: others (users aside from the owner or members of editors) have read-only permissions; write and execute are not permitted
+
+
+## chmod ##
+Modify permissions of a file or directory. 
+
+
+## >, >> ###
+Outputs to fileName, and overwrites original contents. If you want to append, use >>. Ex:
+
+echo "Text to write" > ./jack/fileName.txt
+
+If jack is a folder inside the current directory, that is. If working in the current directory, you can omit "./jack/". Absolute file path is ok, too. Can be used in script.
+
+
+## pwd ##
+Present working directory. Just tells you where you are. Can be used in script: $pwd
+
+
+## HereDoc ##
+Not the actual command name, but heredoc is a way to pass multiple lines to a command (like cat, commonly). Note that using $variables while SSH'd in means those variables act locally (like pwd). Very useful URL:
+https://linuxize.com/post/bash-heredoc/
+
+Ex:
+cat << varName
+PWD is: $(pwd)
+Usr is: $(whoami)
+varName
+
+varName is just a start and end delimiter. Note that putting commands in () is b/c they're commands.
+
+
+#################
+### Scripting ###
+#################
+## echo ##
+Using -e: BASH interprets backslash escapes, like \n for new line (which is different from carriage return, \r, which rewrites the line), \t for horizontal tab, and \v for vertical tabs.
+
+## Comments ##
+#is for single line. Colon space single quote : ' starts a multiline comment, and the single quote ' ends it.
+
+## If/Else ##
+Ex:
+varName=10
+if [ $varName -ne 24 ] && [ $varName -eq 10 ]
+#could also [[ args && args ]], [ args -a args ], where -a means and, & -o means or (or use ||)
+then
+	echo "Less than 2"
+elif (( varName < 11 ))
+then
+	echo "Less than 11"
+fi
+
+Parameters URL:
+https://opensource.com/article/19/10/programming-bash-logical-operators-shell-expansions
+
+If you want to use > instead of -gt, then you have to replace the [ ] with (( )). fi is just if spelled backward, like tac is cat spelled backward.
+
+
+## Case ##
+Ex:
+carMake=Nissan
+case $carMake in
+	"BMW" )
+		echo "It's a beamer." ;;
+	"Nissan" )
+		echo "It's a Knee Sawn." ;;
+esac
+
+
+## While ##
+Ex:
+num=1
+while [ $num -le 5 ]
+do
+	echo $num
+	num=$(( num + 1 ))
+done
+
+Note that until loops are pretty similar to while loops; while loops run while a condition is true, and until loops run until a condition becomes true.
+
+## For ##
+for (( i=0; i<5; i++ ))
+do
+	echo $i
+done
+
+
+## Break, Continue ##
+In a loop, if you want to check that a condition is met (e.g.: if input is a variable), and then either go back to the start of the loop or exit the loop, use either continue or break, respectively. EX:
+for (( i=0; i<=10; i++ ))
+do
+	if [ $i -eq 3 ] || [ $i -eq 7 ]
+	then continue; fi #prints 0..10, except 3 & 7. if break, prints 0..2
+	echo $i
+done
+
+
+############
+## Arrays ##
+############
+Two types: indexed and associative. Former indexes from 0, latter functions as a dictionary. Associative URL: https://linuxhint.com/associative_array_bash/
+Other useful URL: https://linuxconfig.org/how-to-use-arrays-in-bash-script
+
+## Declaring ##
+Associative. Must be declared using declare command. EX:
+declare -A arrayName=( [indexName1]=varName1 [indexName2]=varName2 )
+echo ${arrayName[indexName2]}
+
+Indexed. May be declared using declare. EX: declare -a arrayName #note the lower case
+May also be declared other ways: arName=(val1, val2) OR arName=( val1 val2 )
+
+## Manipulation ##
+To display all values in an array, use @ or *: echo ${arName[@]}
+To display all keys in an array, use ! before: echo ${!arName[@]}
+Can also be done in loop, so produces one key or value per line:
+for key in "${arName[@]}"; do echo "$key"; done
+or all at once: echo $@
+
+Replace ! with # to return an integer size of the array.
+Remove an entry: unset arName[1]
+Append entry.
+For indexed: arName+=(newValue1 newValue2)
+For associative: arName+=( [key1]=value1 [key2]=value2 )

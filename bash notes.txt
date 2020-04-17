@@ -1,0 +1,65 @@
+#!
+# The above line is the shebang ("shuh-bang"), and means this is executable.
+# If not included, you have to type "bash" before your script file name at the prompt.
+# You can also include the shell (like Bash) you want to use: #!/bin/bash
+
+# URL for GNU BASH:
+# https://www.gnu.org/software/bash/manual/bash.html#Introduction
+
+# Bash does not support multi-line comments.
+# Spaces are important! a=b is useful; a = b is not useful.
+# One command per line.
+: '
+Yes it fucking
+does.
+
+Also, somehow I lost a few days of notes? How the hell does that happen?
+
+Also:
+vi fileName opens what appears to be Vim within bash.
+'
+# To explore local Linux commands (WSL), type: "explorer.exe ." The final
+# period indicates the current directory.
+
+
+# ***GENERAL COMMANDS***
+# to print:         To print a blank line, use echo with no args.
+echo Hello World! # can use single, double, or no quote marks. To use quotes:
+echo Mom said \"hi\". # \ is the escape character.
+# CTRL + C interrupts a command (like ping, which just goes on forever!)
+# cp $var1 $var2 to copy, with var1 being the original, var2 the target
+# rm to remove (delete)
+# help [commandName]
+# mkdir creates a directory
+# clear is the same as DOS cls
+# list of DOS equivalents:
+# http://www.yolinux.com/TUTORIALS/unix_for_dos_users.html
+# chmod (change mode). Ex: chmod 755 scriptName.sh
+    # Note that 755 means "I can modify, all others an execute."
+# If you want BASH to behave like DOS, for simple commands you can create an
+# alias. Ex: alias cls=clear Put a series of these in a *.sh file, which will
+# work for simple commands.
+
+# **************
+
+# ***INPUT***
+echo What\'s your name?
+read usrName
+
+# ***VARIABLES***
+# Can be paths: varName=/etc/filepath
+strVar="Hello, world."
+strVar="$strVar. Also, sudo make me a sammich."
+echo $strVar
+
+varName=4
+N2=5
+result=$varName+$N2
+echo $result ">" # putting things in quotes ignores their meaning, mostly.
+
+
+
+# $1, $2, ... $9 are sys vars for args entered with the command that called
+# this script. So, if this was called:
+
+# **************

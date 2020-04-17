@@ -1,0 +1,84 @@
+Host1
+192.168.128.107
+
+Host2
+192.168.128.133
+
+Commands Used:
+sudo vi /etc/hosts
+Then we entered:
+	192.168.128.107 Host1.localhost.com Host1
+	192.168.128.133 Host2.localhost.com Host2
+	
+sudo hostnamectl set-hostname Host2.localhost.com
+hostnames are like URLs are to IP addresses.
+URL: https://www.geeksforgeeks.org/hostnamectl-command-in-linux-with-examples/
+
+## Install Guest Additions ##
+sudo yum group install -y --setopt=group_command=objects "Development Tools"
+- Quotes because of the space.
+
+Install kernel source:
+sudo yum install -y kernel-devel
+- Was already installed.
+
+He goes on to talk about Guest Additions, but somehow this was already installed.
+
+Commands to look up:
+mount
+fstab
+
+To access your host's desktop, be sure you have Guest Additions installed, then in VM Manager, go to your settings for shared folders, and add your desktop folder under a name like hostDesk, and mount it to the same (that is, "hostDesk"). Then, booted into the VM, open and terminal and type:
+sudo mount vboxsf hostDesk /home/jack/Desktop/hostDesk
+
+Set Terminal to F11:
+Find keyboard shortcuts in settings. Add new, name as you like. Command: "gnome-terminal" and assign key as you like.
+Same for Nautilus, except the command is "nautilus"
+
+Kerberos is a secure, 3-party authentication protocol used across almost all platforms.
+
+## NTP ###
+(network time protocol). Compensates for round-trip time, response time. If time is off between points, it adjusts in 0.5 ms/s if the diff is <= 128 ms. If up to 1k s diff, then NTP can step adjust. If >1k s, manual intervention (1k s = 16 2/3 min). Works in UTC only; time zones & Daylight Savings handled locally.
+
+VM cannot often access external server, so relies on CPU clock, which is unreliable. Hypervisor (a VM host, like VirtualBox) can grant access via Guest Additions.
+
+2 Types of NTP server: ntpd (legacy), and chronyd
+ntpd supports all NTP4 modes (broadcast, multicast, manycast). chronyd does not.
+chronyd better for intermittent network access, isolated networks. Faster than ntpd, & uses less memory.
+##  ##
+
+sudo yum install -y chrony #install chrony, check status of it:
+sudo systemctl status chronyd
+
+If not running:
+sudo systemctl start chronyd
+
+To enable at startup:
+sudo systemctl enable chronyd
+This only creates a symlink (like a shortcut and pointer combined) from /etc/systemd/system/multi-user.target.wants/chronyd.service to /usr/lib/systemd/system/chronyd.service
+
+## chrony ##
+chronyd is the server, chronyc is the client. d only accepts local queries by default, can be set up for IPv4 or IPv6.
+##  ##
+
+On Host1: ifconfig
+This shows network IP of 192.168.128.107 w/ netmask of 255.255.255.0, making my network address 192.168.128.0
+
+Open Vim: sudo vim /etc/chrony.conf
+- 1st non-comment line says pool 2.blahblahblah, which means that chrony will resolve to a specific server from a pool of servers at startup.
+- uncomment "allow 192.168.blahblah", and change to your network address (192.168.128.0/24) (24 represents bits, since 255.255.255.0 is 24 bits)
+
+We can allow chronyc to control chronyd with "cmdallow 192.168.128.0/24" but that's not covered here.
+
+If we wanted to sync two peers on the same network, we'd insert a line: "peer <ipAddressofPeer>", and the same in the peer's file. Note that we can specify pool, host, peer, server, and local in one file. Save and exit: esc : x!
+
+Now allow external NTP requests by making a hole in the firewall: "sudo firewall-cmd --permanent --zone=public --add-service ntp" which does exactly as it reads; it permanently adds the ntp service to the public zone via the firewall-cmd command.
+
+reload firewall settings: "sudo firewall-cmd --reload" and then check that the service has been added: "sudo systemctl status chronyd" Mine didn't match his; his listed ntp, mine listed something about a cockpit.
+
+Over on Host2: sudo vim /etc/chrony.conf
+comment out pool line (line 3), add "server 192.168.128.107 iburst" (ip address Host1). esc. :x! to save and exit.
+
+restart chronyd: sudo systemctl restart chronyd
+Ensure Host2 is set to use NTP by using time date ctl command: sudo timedatectl set-ntp true
+

@@ -1,0 +1,29 @@
+The following tells how to create an SSH key for cloning a repository.
+
+In Git (command line; do NOT use bash itself, but bash commands work):
+
+I think you need to ensure ssh-agent is running first, because I have repeatedly had to enter the following command after starting it:
+
+Generate a key:
+sudo ssh-keygen -b 4096 -C "gitKey"
+
+This creates an SSH key with 4096 bits, and adds the comment in quotes. You'll be prompted for a name, which you should give without spaces, and a passphrase, which must be blank for hosts. I left it blank.
+
+Next, start the ssh-agent:
+eval "$(ssh-agent -s)"
+
+I don't know why eval and "$( )" are required, but they are. It outputs a PID (process ID), which you don't need (though if you run the command a few times, you can watch the PID increment). Next, we'll add the key to our list of keys:
+ssh-add ~/.ssh/gitKey
+
+
+On github.com:
+Find your repository, go to settings (right side, near top), and then down to Deploy Keys, and copy the entire contents of gitKeyName.pub there. Name it. Go back.
+
+Right side of screen: Clone or Download. Make sure SSH is selected. Copy the text.
+
+
+Back in Git:
+
+Type:
+git clone <pasteTheTextFromGitHere>
+

@@ -1,0 +1,15 @@
+AAAAB3NzaC1yc2EAAAABIwAAAQEA+2bQ+a1KRxT6lc1N2M55nvmlBUzRkmJNCe7C52If8KTo2VeK+TMeDjlC5oTYCGlQ0bGTiEKHdW9rwsCpExebBBjnTaMMx3BFmP3qOgSvH62if84eOnIMLo5t3dxhRYHerkpn7dIMRh82Lo9sV0Vgjn5jnteQUGjND5PujFVEVeDEj4X3sh41GqPCt42zaNltXPNdZQ/40M0oxAh4ICeKlirz/TePUFRsYUOiNLlGvTFPls1axbt6T324SRGHO25auPCfPVSNTKEth7w58nYvQXLdkxPZThVwidSoI4/pky4WKVoYq/votxkn/gLk57ChNLCGjuPHPQvePbpYQpM1EQ== /home/local/ANT/ntd/.ssh/id rsa
+
+******************
+*** Navigation ***
+******************
+h	Move cursor Left
+j	Move cursor Down
+k	Move cursor Up
+l	Move cursor Right
+
+:	Enters command line
+i	insert / enter edit mode
+:wq	write (save), then quit
+:q!	quit without saving
+
