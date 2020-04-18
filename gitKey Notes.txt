@@ -27,3 +27,10 @@ Back in Git:
 Type:
 git clone <pasteTheTextFromGitHere>
 
+
+...
+
+But it turns out that cloning only creates a local copy; it does not permit you to push to the repository. Huh.
+
+For info on that, try this URL:
+https://www.tutsmake.com/upload-project-files-on-github-using-command-line/
