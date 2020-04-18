@@ -2,19 +2,13 @@
     tool = vimdiff
 
 [user]
-    name = Nima Talebi
-    email = ntd@amazon.com
-
-    #name = Nima Talebi
-    #email = me@nima.id.au
-
-    #name = Norman Yue
-    #email = norman.yue@owasp.org
+    name = Chris Klapheke
+    email = clklap01@gmail.com
 
 [core]
     editor = vim +1
     pager = less -FMRiX
-    excludesfile = /home/ntd/.config/git/excludes
+    excludesfile = /home/ec2-user/.config/git/excludes
 
 [color]
     diff = auto
