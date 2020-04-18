@@ -1,0 +1,251 @@
+[merge]
+    tool = vimdiff
+
+[user]
+    name = Nima Talebi
+    email = ntd@amazon.com
+
+    #name = Nima Talebi
+    #email = me@nima.id.au
+
+    #name = Norman Yue
+    #email = norman.yue@owasp.org
+
+[core]
+    editor = vim +1
+    pager = less -FMRiX
+    excludesfile = /home/ntd/.config/git/excludes
+
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+    ui = auto
+
+[push]
+    #. You did not specify any refspecs to push, and the current remote
+    #. has not configured any push refspecs. The default action in this
+    #. case is to push all matching refspecs, that is, all branches
+    #. that exist both locally and remotely will be updated.  This may
+    #. not necessarily be what you want to happen.
+    #.
+    #. You can specify what action you want to take in this case, and
+    #. avoid seeing this message again, by configuring 'push.default' to:
+    #.   'nothing'  : Do not push anything
+    #.   'matching' : Push all matching branches (default)
+    #.   'tracking' : Push the current branch to whatever it is tracking
+    #.   'current'  : Push the current branch
+    default = matching
+[alias]
+    #. -={
+    #                        <workspace>        <index/staged>      <commit>
+    #                            |   \__ ds,dsw __/   |    \__ d,ds __/ |
+    #                            |                    |                 |
+    # git add <fn>               | -----------------> |                 |
+    # git commit <fn>            |                    | --------------> |
+    # git push                   |                    |                 | ===>
+    # git reset HEAD <fn>        |                    | <-------------- |
+    # git checkout -- <fn>       | <----------------- |                 |
+    unstage = reset HEAD --
+    revert  = checkout --
+
+    #. http://gitready.com/advanced/2011/10/21/ribbon-and-catchup-reading-new-commits.html
+    ribbon = tag --force _ribbon origin/master
+    catchup = log --patch --reverse --topo-order _ribbon..origin/master
+    catchup2 = log --patch --reverse --topo-order --first-parent -m _ribbon..origin/master
+
+    vp = !"git verify-pack -v .git/objects/pack/pack-*.idx|grep -E '^[a-f0-9]{40}'"
+
+    #. Git Friends (TODO) -={
+    #$ git {rev-parse}
+    #$ git {format-patch,am}
+    #$ git {bisect}
+    #$    git bisect start <bad> <good>
+    #$    git bisect run bash -c "tst"
+    #$    git bisect reset
+    ## Ninja
+    #$ git cat-file commit 4db558a
+    #$ git rev-parse 4db558a
+    #$ git rev-parse 4db558a^{tree}
+    #$ git ls-tree 4db558a
+    #$ git cat-file blob ...
+    #$ git cat-file commit ...
+    #$ git show-ref
+    #$ git update-ref
+    #$ git filter-branch --tree-filter "sed -i -e 's/the/th3/g' \$(find blackfoot_task_manager -type f)" HEAD
+    #$ git diff <ref> <ref>@{1}
+    #$ git fast-export HEAD > /tmp/dag.txt
+    #$ git fast-import < <(sed -e s/foo/bar/g /tmp/dag.txt)
+    #$ git mergetool
+    #. }=-
+    #. Git Diff -={
+    d = diff
+    ds = diff --staged
+    dw = diff --word-diff
+    dws = diff --word-diff --staged
+    dw = diff --word-diff
+    dt = difftool
+    fush = !"f() {\
+        b=\"$(git rev-parse --abbrev-ref HEAD)\";\
+        git push origin :${b} >&/dev/null;\
+        git push origin ${b}:${b};\
+    }; f"
+    #. changed: Files changed since a certain commit (master) to here -={
+    #. git change <sha>
+    changed = !"f(){\
+        git diff --name-only ${1:-master}..;\
+    }; f"
+    #. }=-
+    #. compare: Utility to compare "identical" branches -={
+    #. git compare <ref1>..<ref2> <ref3>..<ref4>
+    compare = !"f(){\
+        logs_a=\"$(git log --oneline --pretty='%s' ${1})\";\
+        logs_b=\"$(git log --oneline --pretty='%s' ${2})\";\
+        if [ \"${logs_a}\" == \"${logs_b}\" ]; then\
+            commits_a=( $(git log --oneline --pretty='%h' ${1}) );\
+            commits_b=( $(git log --oneline --pretty='%h' ${2}) );\
+            for ((i=0; i<${#commits_a[@]}; i++)); do\
+                echo \"#. Comparison $i: ${commits_a[$i]} vs ${commits_b[${i}]} -={\";\
+                git log -p -1 ${commits_a[$i]}|tail -n +1 > /tmp/$$.a;\
+                git log -p -1 ${commits_b[$i]}|tail -n +2 > /tmp/$$.b;\
+                colordiff /tmp/$$.a /tmp/$$.b;\
+                rm -f /tmp/$$.a /tmp/$$.b;\
+                echo \"#. }=-\";\
+            done;\
+        fi;\
+    }; f"
+    #. }=-
+    #. dr: Compare local branch to the tracked remote branch -={
+    dr       = !"f(){ git d ${1:-$(git b)}..${1:-$(git b)}@{u}; }; f"
+    #. }=-
+    #. }=-
+    #. Git Status -={
+    s       = status -s
+    st      = status
+    #. }=-
+    #. Git Log -={
+    logbase  = log --graph --abbrev-commit --date=short --decorate=short --format=format:'%C(blue)%h %C(green)%ad %C(white)%<(70,trunc)%s %C(red)—[ %C(yellow)%ar %C(white)by %C(magenta)%an <%ae> %C(red)]%C(bold yellow)%d%C(reset)'
+    l        = !"git logbase --first-parent"
+    ll       = !"git logbase"
+    lb       = !"git logbase --all"
+    lll      = !"git logbase --stat"
+    llb      = !"git logbase --stat --all"
+
+    f        = "!git ls-files | grep --color -i"
+
+    last     = log -1 HEAD -p
+    dump     = log -p -1
+    dag      = log --graph --format='format:%C(yellow)%h%C(reset) %C(green)%ad %C(blue)\"%an\" <%ae>%C(reset) %C(magenta)%ar%C(reset)%C(green)%d%C(reset)%n%s' --date-order
+
+    ls       = !"f(){ git l -S\"${*}\"; }; f"
+    lsp      = !"f(){ git l -p -S\"${*}\"; }; f"
+
+    deleted = log --abbrev-commit --pretty=oneline --decorate --diff-filter=D --summary
+    #. lr: Compare local branch to the tracked remote branch -={
+    lr       = !"f(){ git l ${1:-$(git b)}..${1:-$(git b)}@{u}; }; f"
+    #. }=-
+    #. }=-
+    #. Git Reflog -={
+    rl      = reflog --decorate
+    rr       = log --walk-reflogs --decorate --pretty
+    #. }=-
+    #. Git Add -={
+    ap = add --patch
+    #. }=-
+    #. Git Branch -={
+    br   = branch -av
+    bm   = branch -m --
+
+    bmy  = branch --merged
+    bmn  = branch --no-merged #. can't delete these as they've not been merged
+
+    b    = rev-parse --abbrev-ref HEAD
+    bb   = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:blue)%(objectname:short):%(objectsize) %(color:green)%(committerdate:short) %(color:white)%(contents:subject) %(color:red)—[ %(color:yellow)%(committerdate:relative) %(color:white)by %(color:magenta)%(authorname) %(authoremail) %(color:red)] %(color:bold yellow)(%(refname:short) -> %(upstream:lstrip=2)) %(color:reset)'
+    bbb  = branch -vva
+    bbbb = !"f(){\
+        git branch -qa|\
+        sed -e 's/^..\\([^ ]*\\).*/\\1/'|\
+        while read b; do\
+            git log -1 --pretty=format:'%C(yellow)%h %C(blue)%C(green)%ci %C(red)%an %C(blue)'$b'%C(reset) - %C(bold yellow)%s%C(reset)%n' $b;\
+        done |\
+        sort -r -k2;\
+    }; f"
+    #. }=-
+    #. Git Rebase -={
+    #. rr: git rebase -i <tracking-branch> -={
+    rr = !"f(){\
+        this=$(git b);\
+        that=${1:-${b}};\
+        change_branch=0;\
+        [ \"${this}\" == \"${that}\" ]; change_branch=$?;\
+        [ ${change_branch} -eq 0 ] || git checkout ${that};\
+        git rebase -i ${that}@{u};\
+        [ ${change_branch} -eq 0 ] || git checkout ${this};\
+    }; f"
+    #. }=-
+    #. }=-
+    #. Git Delete -={
+    delete1 = filter-branch -f --index-filter "git update-index --remove $1" HEAD
+    delete2 = !"f(){\
+        git filter-branch -d /dev/shm/wmii/tmp --tree-filter \"rm -f $1\" HEAD;\
+    }; f"
+    #. }=-
+    #. Git Split -={
+    #  git filter-branch --prune-empty --index-filter 'git ls-tree -z -r --name-only --full-tree $GIT_COMMIT | grep -z -vE "CLEANUP|STANDARDS" | xargs -0 -r git rm --cached -r -- ' -- --all
+    #. }=-
+
+    serve   = !"f(){ git daemon --export-all --base-path=$(pwd)/.git/; }; f"
+    #search  = log -S"important phrase" -p --
+
+    dummy  = "!f(){\
+        git filter-branch -d /dev/shm/wmii/tmp --commit-filter 'git commit-tree \"$@\"' HEAD;\
+    }; f"
+
+    squish  = "!f(){ git rebase -i ${1}^ && git reset --mixed HEAD^; }; f"
+
+    atp     = diff --stat origin/master
+    topush  = log origin/master..HEAD #. about to push
+    topull  = log HEAD..origin/master #. about to pull
+
+    file    = log -p -C6 --oneline --
+    co      = checkout
+    ci      = commit
+
+    n       = "!f(){ git symbolic-ref HEAD refs/heads/${1}; }; f"
+
+    t       = tag -l -n1
+
+    cl      = clone
+    rp      = rev-parse master
+    rmci    = rebase --onto $1^ $1 HEAD
+
+    clean1  = stash -u -a
+    clean2  = clean -dnx
+
+    whois   = log --stat -i -1 --pretty=format:"%an <%ae>\n" --author="$1"
+    rlog    = log --stat -p -2
+    whatis  = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+    lrm     = rm --cached --
+    sdiff   = diff --staged --
+
+    rst     = reset --keep master@{1}
+
+    noff    = merge --no-ff
+
+    ver     = rev-parse --short HEAD
+    version = log -1 --pretty=format:%H
+    #. }=-
+
+[amazon]
+    append-cr-url = true
+    pull-request-by-default = true
+
+[diff]
+    tool = vimdiff
+
+[difftool]
+    prompt = false
+
+[rerere]
+    enabled = false
+    autoupdate = true
