@@ -1,0 +1,46 @@
+Read later:
+https://chris.beams.io/posts/git-commit/
+https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging
+https://danielkummer.github.io/git-flow-cheatsheet/
+
+sudo yum install git
+ssh -A #follows your agent to your machine
+
+git status
+git add dot.gitconfig
+git commit -m "update sample file"
+
+git log -p
+
+cd in Git repository:
+get fetch #gets up to date with remote
+git l #
+
+
+commit is different from push!
+	commit isn't sent; push is modifying the remote (the server).
+
+Before you interact with the server:
+git fetch #doesn't change your stuff, just in the .git directory
+git lb #to make sure you're in the same place as the Master.
+
+#look this up later: git rebase origin/master #changes my stuff to the most up-to-date version
+
+###############
+## Scripting ##
+###############
+SHIFT ZZ is write quit in VIM
+vim: set
+
+IFS #bash command for input field separator.
+
+Everything in $(  ...  ) acts as a separate sub-shell, which returns to our script after it's done.
+
+tr 'a' 'b' #replace all a with b in array:
+x=( aaa bbb ccc )
+echo ${x[*]} | tr ' ' '|'
+
+echo nima | tr '[a-z]' '[b-za]' #offset all letters in nima by one letter
+
+Covid Data:
+https://aatishb.com/covidtrends/

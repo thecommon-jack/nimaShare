@@ -1,0 +1,108 @@
+echo $$
+	returns pid
+	$ is shell special var
+	returned 3630, which is my process tree
+pstree
+pstree -H $$
+	process tree
+	ps is the same thing, but not human friendly
+htop is like task manager
+look up proc, grep
+
+
+
+Hey, what are all those chmod codes, and how are they derived?
+URL: https://www.computerhope.com/unix/uchmod.htm
+
+ls -l /proc/$$
+	lists all processes
+
+OM means out of memory.
+
+ulimit -a
+
+typing / in a manual pulls up a search function, just like vim.
+
+try putting a / after the folder when using ls:
+	ls /dev/
+
+what's an inode?
+
+look up stat command
+	what's the diff: change, modified
+
+########################
+##### YOU ARE HERE #####
+########################
+
+what is netstat -ntlp
+
+127 in an ip address (first), is always local host
+
+Directories:
+bin: executables
+sbin: super user binif
+boot: exactly what you think
+dev: devices, physical or virtual
+	/dev/null is a black hole
+	/dev/zero is an endless string of zeroes
+	/dev/random produces random data
+etc: configuration (incl ssh)
+opt: (optional) something written but not packaged
+sys: kind of like proc
+var: variables
+usr: could almost get away with mounting read only
+
+var usr etc proc sys are the most important
+
+go look up octal numbers, like how 0x10 means 16
+what is tty?
+
+/dev/pts/3 is our stdout, but that number changes
+
+find is also a bash command, e.g.: find /opt/
+
+you need to understand the numbers with chmod. Common: 755, 644
+
+jobs
+	kill %2 #kills the second listed job
+
+ls -l /     -> what's this do? He uses this a lot.
+	-> It's long (-l) ls of root directory (/)
+
+ls -l /var/log/
+
+tail -f secure
+
+dmesg #command?
+
+Learn regular expressions.
+	find /tmp/ -regex '^.*20.*yum.*'
+	^ starts with this pattern I declare after
+		within 
+	echo xxyxx | grep --color -P 'x({1}|{5})y'
+
+ps -ef|grep ntp
+
+What is: strace -e open netstat -tlp |& grep etc
+	he had -ntlp, which doesn't look up anything
+	t: only look at TCP
+	l: only things that are listening (Not other states of stp)
+	p: list process ID
+	|& take the output and send it to grep
+
+apropos <arg> #tell me things apropos to <arg>
+
+more Vim
+
+Why this is important: most of the job is terminal. You'll be bash scripting, using python, and related.
+
+system calls are inputs and outputs to the kernel.
+
+
+summarize an apache log file to see how many connections are getting 200s (success)
+	look up http codes on the high level (400s, not 401, for example)
+
+Google most important linux commands for sysadmin
+
+Nima's github account name is Nima. google how to share a repository / group.
