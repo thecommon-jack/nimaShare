@@ -1,4 +1,4 @@
-#!
+#!/bin/bash
 
 function opsFun(){
 	read -p "Gimme'dem digits (separated by a space): "
