@@ -1,19 +1,48 @@
 ###############
 ### General ###
 ###############
+- Typing "/" in a manual pulls up a search function, just like vim.
+
+- double right clicking copies and pastes in bash
+
+- Mounting and unmounting:
+https://linuxize.com/post/how-to-mount-and-unmount-file-systems-in-linux/
+
+- init (initialization), the first daemon (persistent) process during boot
+
+- FStab:
+https://linuxconfig.org/how-fstab-works-introduction-to-the-etc-fstab-file-on-linux
+
+- POSIX is an international standard between Unix systems, so commands / scripts that are POSIX compatible are ones that are portable between OSs.
+
 - Bash cares greatly about capitlization, but not at all about blank lines. Similarly, it cares greatly about spaces, so a=1 is good, while a = 1 is bad.
+
 - Command options may be listed without additional dashes or spaces: -adl includes options a, d, and l.
 
-- CTRL + C is abbreviated ^C. Entering data in a prompt and done now? ^D
+- CTRL + C is abbreviated ^C, and means cancel. Entering data in a prompt and done now? Try ^D. Want to exit a process? ^Z, but it doesn't stop the process; it merely sends it to the background!! So, if you have something that'll run forever, don't use ^Z.
 
 - $REPLY is a system variable
 - \r is a carriage return
 - $0..$9 are system argument vars. When a command is executed with args, those become $1, etc. Note that $0 is the command itself. For example, hello.sh arg1 corresponds to $0 & $1.
 
+- $@ is all of the arguments passed to a script or command, so if you type: bash testScript.sh 123 456
+
+then bash outputs: 123 456, the two arguments you passed it.
+
+- $# is the number of arguments you passed, so in the above, $# returns 2.
+
+- ${} runs the commands listed in {} within the current shell environment (so variables declared, etc. remain after execution).
+
+- () opens and runs a  separate child instance of your shell, so only the output is returned, and nothing else is retained. Useful say, if you want to alter IFS for a few commands, but not globally.
+
+- IFS is a system var meaning Internal Field Sperator. Default value is a space, but you can change that with = assignment, like any other var. Note that if you want to temporarily change it, do so within (), which opens a subshell and doesn't retain the value you assign it there.
+
 
 ################
 ### Commands ###
 ################
+## rm ##
+remove. Sometimes requires super user. rm -r removes a directory.
 ## cat ##
 Concatenate. Can be used for that, or (concatenating) a listing of files in a folder, either the current or another. EX:
 
@@ -24,8 +53,10 @@ https://www.tecmint.com/13-basic-cat-command-examples-in-linux/
 
 
 ## ls ##
-Lists. Common options:
+Same as dir in DOS, ls lists contents of the pwd. Common options:
 -l	Long Format**
+-i	inode (index node) displayed. Just a unique identifier.
+	Interesting, but not really required, inode URL: https://linoxide.com/linux-command/linux-inode/
 -h	human readable (just list the file names)
 -t	sort by date modified
 -1	(one, not L), forces one entry per line
@@ -41,8 +72,25 @@ r--: others (users aside from the owner or members of editors) have read-only pe
 
 
 ## chmod ##
-Modify permissions of a file or directory. 
+Change Mode. Modify permissions of a file or directory. chmod 123 fileName. Option -R is recursive. Works on octal nums, where:
+4=read
+2=write
+1=execute
+0=noPermissions
 
+Add them to set permissions for user/owner, owner's group, and others, respectively. EX: chmod 714 fileName would ls to look like this: -rwx--xr--. Note that the first dash is file type: -=regular file, d=directory, l=symbolic link. Useful URL: https://www.computerhope.com/unix/uchmod.htm
+
+## pstree ##
+ProceSs Tree. A tree visual of current processes. -l expands tree. Apparently -p expands it more.
+
+## ps ##
+ProceSs. Returns process info, incl. PID (Process ID). ps $$ returns bash PID.
+
+## fg ##
+ForeGround. Moves a process to the foreground. Takes args. If you don't give it args, bash moves to the "first" avail. PID. See ^Z in General section.
+
+## htop ##
+Task Manager equiv. Have to install before first use.
 
 ## >, >> ###
 Outputs to fileName, and overwrites original contents. If you want to append, use >>. Ex:
@@ -72,11 +120,15 @@ varName is just a start and end delimiter. Note that putting commands in () is b
 #################
 ### Scripting ###
 #################
+- a hook is a function that is invoked automatically if a specified event occurs.
+
 ## echo ##
 Using -e: BASH interprets backslash escapes, like \n for new line (which is different from carriage return, \r, which rewrites the line), \t for horizontal tab, and \v for vertical tabs.
 
 ## Comments ##
 #is for single line. Colon space single quote : ' starts a multiline comment, and the single quote ' ends it.
+
+## 
 
 ## If/Else ##
 Ex:
@@ -157,7 +209,26 @@ for key in "${arName[@]}"; do echo "$key"; done
 or all at once: echo $@
 
 Replace ! with # to return an integer size of the array.
+EX:
+arr=( one two )
+for (( n=0; n<${#arr[@]}; n++ )) do
+	echo ${arr[n]}
+done
+
+Note the use of # before arr. That's what gets you the number. Else, you're passing each element to the n< part of the for loop.
+
 Remove an entry: unset arName[1]
 Append entry.
 For indexed: arName+=(newValue1 newValue2)
 For associative: arName+=( [key1]=value1 [key2]=value2 )
+
+#########################
+## Regular Expressions ##
+#########################
+AKA: regex, regexp.
+Read Up: https://en.wikipedia.org/wiki/Regular_expression#POSIX_basic_and_extended
+
+
+Where are you now? grep. URL:
+https://www.cyberciti.biz/faq/grep-in-bash/
+Also you're in nima notes 1

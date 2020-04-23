@@ -1,18 +1,44 @@
-Man there's a lot going on with AWS. Let's break it down. First up, this URL will get you to your management console:
+Man there's a lot going on with AWS. Let's break it down. First up after creating a (free tier) AWS account, which still requires a credit card, head over to this URL to set up your first instance:
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html
+
+As a side reference, this URL will get you to your management console:
 console.aws.amazon.com/ec2
 
+This URL will help you create and use an SSH (Secure SHell) key, which you'll need to remote access your EC2 (Elastic Cloud Computing) instance:
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html
 
-Find your way to a new instance. This is just a placeholder section for now.
-
 SSH into your instance using a key.pem file (not necessarily that name):
-ssh -i Key01.pem ec2-user@ec2-3-20-239-151.us-east-2.compute.amazonaws.com
+
+
+
+ssh -A ec2-user@ec2-18-225-11-66.us-east-2.compute.amazonaws.com
+
+
+
+The -A means that you're bringing all your private keys with you (yes, even if you ssh further from there) IF and ONLY IF ssh-agent is running. See SSH notes for more.
 
 Note that everything after the @ will change every time you stop and start that instance, so go to your EC2 console and copy the new into that spot.
 
 Next, this Linux is redhat, so apt is replaced with yum. Install tmux, a utility you'll use to pair program, using this command:
-
 sudo yum install tmux
+
+Create a new shared session (-s) of tmux with:
+tmux new-session -s sessionName
+
+Find what sessions are active with:
+tmux list-sessions
+
+Attach to (aka: join) another session with:
+tmux attach-session -t sessionName
+
+Note that splitting a pane (a subset terminal within your window) doesn't require the creation of a new pane; you simply split the one that exists.
+
+General tmux overview URLs:
+https://arcolinux.com/everthing-you-need-to-know-about-tmux-introduction/
+https://thoughtbot.com/upcase/videos/tmux-advanced-workflow
+
+tmux cheat sheet URL:
+https://tmuxcheatsheet.com/
 
 Look up tmux pair programming and land on this page:
 https://www.hamvocke.com/blog/remote-pair-programming-with-tmux/

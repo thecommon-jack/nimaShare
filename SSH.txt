@@ -1,0 +1,73 @@
+#############
+## General ##
+#############
+Secure SHell. Method of secure remote access. Really much simpler than it originally seemed.
+
+We need to create a set of keys, one public that we pass to the server, and one private which we keep to ourselves. Then, we have to start the ssh-agent daemon, add our new key to it, and then ssh into our host. Easy, right?
+
+
+## Keys ##
+Keys are like passwords, and are generated locally in pairs for asymmetric (what we're using) SSH. Keys are located in /home/userName/.ssh
+
+The public key has file extension *.pub, and is shared / put on the server. This is fine, as a public key is useless without its private counterpart, which is not transmitted. Private keys have no file extension.
+
+We can use one key pair for multiple accounts.
+
+##############
+## Commands ##
+##############
+## ssh-keygen ##
+Exactly what you think it does.
+
+-b allows you to specify bit length; 2048 is standard, but up to double that, 4096, is also acceptable. GitHub requires 4096.
+
+-p will permit you to create a new passphrase (password) for an existing key, or remove one, via prompts. No other arg is needed with this flag (flag=option).
+
+-l shows fingerprint for a specific key.
+
+GitHub says to input this:
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+but -t rsa (specifies RSA encryption) isn't required as RSA is the default, and -C "your_email@example.com" is just a comment. Really, if not for their 4096 requirement, you could just use the command sans args or flags.
+
+Make sure you specify the folder to place your key, or be in the folder when you run ssh-keygen, else it'll create in your pwd instead of the (indicated) /home/userName/.ssh directory.
+
+
+## ssh-agent ##
+A daemon (background program) that stores our private keys.
+
+From the manual:
+If a command line is given, this is executed as a subprocess of the agent.  When the command dies, so does the agent. /manual
+
+That is, if you enter "ssh-agent" into the shell, it outputs 3 lines of information, and then exits. That's it, and which is why we use eval "$(ssh-agent)"!! Finally, an answer (no thanks to you, forums!). Don't include those two exlamation marks, by the way.
+
+We are asking bash to evaluate the output of running the command ssh-agent. Without eval, ssh-agent simply displays info and then closes; it does not persist!
+
+Go ahead, check that it's in the process tree: pstree, and kill all instances of it if you have more than one running: pkill ssh-agent.
+
+#This blurb below is inocmplete:
+To keep from having to start the daemon every time we use ssh, we can write that output to a file in the tmp directory with: ssh-agent > /tmp/ssh-agent
+
+
+## ssh-add ##
+Adds your local (private) key to ssh-agent. ssh-add <filePath to key>. If you have a passcode, bash will ask for it. IF you get connection errors, make sure you started ssh-agent per above. If you give no args, ssh-add will attempt to add all keys from /home/userName/.ssh. ALWAYS give it an argument with full path!!
+
+
+
+@@@ At the end of the day, to set up, you need to: @@@
+ssh-keygen -b 4096	(-b 4096 for GitHub)
+eval $(ssh-agent)	(start ssh-agent)
+chmod 600 <fullKeyPath>	(change permissions to be more strict)
+ssh-add	<fullKeyPath>	(be sure to specify full path!)
+
+ssh-agent>/tmp/ssh-agent.sh	(optional, helps with -A flag on ssh)
+
+Git:
+Go to your github settings online, and add your key ("Deploy Key")
+ssh -T git@github.com	(to test connection)
+
+Now use git commands; you don't need to (and can't) connect to GitHub via SSH, but if your keys are in ssh-agent, you're good to go.
+
+Or another server:
+Find a way to copy your public key to the server, then:
+ssh -A -i keyName userName@hostAddress.com (-A for agent, -i for keyname)

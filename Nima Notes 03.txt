@@ -1,3 +1,64 @@
+pstree -p #expands the tree
+pkill -ef|grep ssh-agent
+pgrep
+unset
+xargs
+
+
+
+What is the use of ulimit?
+used for setting limits on #processes, other resources. Not really useful right now.
+
+What are the other four main git commands? Fetch, push, pull, commit.
+
+## Fetch ##
+Updates your local view (updates parts of .git to do with this particular remote) of Origin. Basically updates an index. To see where you are, try git lb first.
+
+## Pull ##
+May screw things up if changes aren't simple, especially if Origin and I went in different directions (not the same as different places!). Better to use git rebase.
+
+## Rebase ##
+I'll come to this later.
+
+
+
+origin: you point to this.
+Master: the master branch.
+Get updates since your last fetch.
+
+git commit
+git push
+git add. Flags a file to be committed. a git  file that doesn't exist in remote Origin/branch Master, or for 
+
+## Commit ##
+To add something your local repository. If someone is using you as their remote branch, they could now see it if they git fetch. To push to Origin/Master, you first have to commit. Commit creates a log. If you don't commit a file, git ignores changes you made to that file.
+
+git commit opens vim. You have to add a description. 72 characters first line, blank line, then 82 characters if you need more. Save. Exit. (:wq)
+
+## Log ##
+git log. Shows changes timeline. Now git lb to see current status, then git push, then git lb again to see that origin & master are up to date with you.
+
+bo back and find that link Nima sent you that had the XKCD comic in it. THat's got more info.
+
+git status tells you what's been modified since your last commit.
+git diff tells you what the differences are between two files.
+
+To push something means to put your updated copy of a file on your Origin / Master.
+
+Origin: just a repository which I pull from (github is my remote, my origin, though there's no specific reason to call it that except that it's a centralization of an otherwise decentralized process). Master: just a local name, the default, for the branch I'm pointint to in my remote (in this case, Origin).
+
 What is a socket?
 
 What's the difference between a dictionary and a hash table and a hash map?
+
+A guide to Git comments:
+https://chris.beams.io/posts/git-commit/
+
+Moar git:
+file:///C:/Program%20Files/Git/mingw64/share/doc/git-doc/giteveryday.html
+
+Getting Changes from a Remote Repository URL:
+https://help.github.com/en/github/using-git/getting-changes-from-a-remote-repository
+
+Server-Side info URL:
+https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys
