@@ -6,6 +6,9 @@ xargs
 
 
 
+*** We use git bash because it has access to the windows file directory, while WSL (Windows Linux command line) does not. ***
+
+
 What is the use of ulimit?
 used for setting limits on #processes, other resources. Not really useful right now.
 
@@ -62,3 +65,9 @@ https://help.github.com/en/github/using-git/getting-changes-from-a-remote-reposi
 
 Server-Side info URL:
 https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys
+
+
+
+git add .
+git commit
+git push
